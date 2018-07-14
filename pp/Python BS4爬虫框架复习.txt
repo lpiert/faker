@@ -1,0 +1,113 @@
+Python BS4爬虫框架复习
+
+/********************************************************/
+
+
+1:属性过滤(soup对象)
+	
+
+	.标签 -> 查找标签节点 -> 返回值为标签
+	
+	.name -> 查找标签名字 -> 返回值为列表
+	
+	.attrs -> 查找属性{ 键名:键值 } -> 返回值为字典
+	
+	Tag[class]<-.attrs -> 查找标签的指定属性 -> 返回值为属性值
+
+	get('class')<-.attrs -> 跟Tag[class]=.attrs一样
+
+	Tag[class] = 'newclass' -> 改变铺获的class的值
+
+	get('class') = 'newclas' ->改变铺获的class的值
+
+	del Tag[class] 跟 del get('class') 效果一样删除属性
+
+	.string -> 铺获字符串值
+
+	.strings -> 铺获多个字符串的值
+
+	.stripped_strings -> 过滤铺货到的字符串的值
+
+	.contents -> 获取当前节点的所有子节点 -> 返回值为列表
+
+	.children -> 获取当前节点的所有子节点 -> 返回值为类列表对象(如果要获取所有内容遍历即可)
+
+	.descendants -> (剥离式递归获取所有子节点)
+
+	.parent -> 获取父节点
+
+	.parents -> 获取所有父节点(需要遍历)
+
+	.next_sibling -> 获取下一个兄弟节点
+
+	.next_siblings -> 获取全部下面的兄弟节点(需要遍历)
+
+	.previous_sibling -> 获取上一个兄弟节点
+
+	.previous_siblings -> 获取全部上面的兄弟节点(需要遍历)
+
+	.next_element -> 获取下一个节点
+
+	.next_elements -> 获取全部下一个节点(需要遍历)
+
+	.previous_element -> 获取上一个兄弟节点
+
+	.previous_elements -> 获取全部上一个兄弟节点(需要遍历)
+
+
+
+2:搜索文档树-方法过滤 find_all(Tagname , attrs , recursive ,text , keywords)
+	
+	find_all('tag') -> 获取tag标签
+
+	find_all(re.compile('^a')) -> 传入正则参数铺获a开头的标签
+
+	find_all(['tag1','tag2']) -> 传入数组铺获tag1和tag2开头的标签
+
+	find_all(True) -> 传入布伦值True铺获所有标签
+
+	find_all(class_='c1') -> 高级铺获传入class值为c1获取标签 ☢注意class为关键字所以改为class_
+
+	find_all(id='c1') -> 类似find_all(class_='c1')
+
+	find_all(a , class_='c1') -> 类似find_all(class_='c1'),只不过多个a标签为基础
+
+	find_all(attrs={ 'data-':'' }) -> 铺获HTML5私有属性data-
+
+	find_all(text='str') -> 传入text参数获取值str
+
+	find_all(text=re.compile('str')) -> 获取多个值str
+
+	find_all('a' , limit=2) -> 限制只能铺获2个a标签
+
+	find_all('a' , recursive=False) -> 直接获取a的子节点(忽略子孙节点)
+
+
+3:搜索文档树-方法过滤 find()
+
+	☢find()与find_all()方法基本类似区别在以一个直接返回结果,一个返回列表
+
+	find_parent() / find_parents() -> 铺获父节点
+
+	find_next_sibling() / find_next_siblings() -> 铺获下一个兄弟节点
+
+	find_previous_sibling() / find_previous_siblings() -> 铺获上一个兄弟节点
+
+	find_all_next() / find_next() -> 铺获下一个节点
+
+	find_all_previous() / find_previous() -> 铺获上一个节点
+
+
+4:CSS选择器-方法过滤 select()
+
+	select('tag') -> 通过标签铺获内容
+
+	select('.a') -> 通过类铺获内容
+
+	select('#a') -> 通过id铺获内容
+
+	select('tag .a') -> 复合铺获复合tag标签a类的内容
+
+	select('a[href="a"]') ->通过属性铺获
+
+
