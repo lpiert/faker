@@ -1,0 +1,173 @@
+/* 记录Python爬虫经常用到的操作 : 前端最近没啥要干(转一下python) */
+
+
+!爬虫遇到的错误类型总结 -> 
+	
+	1: find_all(attrs={'data-xx-xx':'Value'})获取私有属性	,注意一定要把data补完
+	2: 获取到标签后可直接使用方括号获取属性值['attr']
+	3: 有些图片是通过动态加载的,此时应该注意json方向
+	   -> 例如像图虫,通过拼接响应
+
+
+
+1: 保存文件至本地
+	
+	#打开文件
+		open(filename , mode , buffering(缓冲区))
+		-> mode主要6种模式: r | r+ | w | w+ | a(追加) | a+
+
+	#读操作
+		read() | readline()->只读一行 | readlines()->生成的是列表
+
+	#写操作
+		write() | writelines()->当数据为列表时换writelines
+
+
+
+2: 常用函数:
+	
+	2-1: set() -> 去除数组中重复的值 , &(交集) , |(并集) , -(差集)
+
+
+3: 常用模块
+	
+	3-1: os模块
+	3-2: urllib模块
+	3-3: selenium模块
+	3-4: time模块
+	3-5: bs4模块
+	3-6: re模块
+	3-7: urllib.parse模块
+	3-8: sys模块
+	3-9: json模块
+	3-10: threading模块
+
+
+4: 数据转换
+	
+	4-1: dump() | dumps() | load() | loads() 
+		 -> python可识别对象转json(文件方面)
+		 -> python可识别对象转json(内容方面)
+		 -> json转python(文件方面)
+		 -> json转python(内容方面)
+
+
+5: 多线程(threading模块)
+
+	5-1: threading.current_thread() -> 返回当前线程
+	5-2: threading.enumerate() 	    -> 返回正在运行线程的列表
+	5-3: threading.active_count()   -> 返回正在运行线程的数量
+
+	5-5: 例子-1:
+
+		import threading
+		import time
+		from multiprocessing import Queue
+
+		def thread_fn():
+		    print('Start\n')
+		    time.sleep(0.1)
+		    for i in range(4):
+		        print('finished')
+
+
+		def main():
+		    print('先来看看Python多线程的操作:\n')
+
+		    add_thread = threading.Thread(target=thread_fn , name='threading_1')
+		    add_thread.start()
+		    # add_thread.join()
+		    print('==========All done===========')
+
+		if __name__ == '__main__':
+		
+		    main()
+
+    输出的结果是===> start -> All done -> finished * 4 因为多线程是同时在进行工作的如果没有添加 , 
+    而添加join()的作用是等其他进程完成工作后 , 才执行join()下面的操作 。 另外进程消耗时间少的工作,会先输出
+
+
+    5-5: 例子-2:
+
+    	# -*- coding:utf-8 -*-
+
+		import threading
+		import time
+		from multiprocessing import Queue
+
+		# 处理函数
+		def thread_fn(val , q):
+		    for i in range(len(val)):
+		        val[i] = val[i]**2
+		    q.put(val) #用put()输出结果,因为线程没有return()
+
+
+		def main():
+		    q = Queue()
+		    data = [[1,1,1],[2,2,2],[3,3,3],[4,4,4],[5,5,5]]
+		    threads = [] #创建线程池
+		    results = []
+
+		    for j in range(4):
+		        new_thread = threading.Thread(target=thread_fn,args=(data[j],q)) #第二个参数是传参
+		        #开启线程
+		        new_thread.start()
+		        threads.append(new_thread)
+
+		    for thread in threads:
+		        thread.join()
+
+		    #输出结果
+		    for k in range(4):
+		        results.append(q.get())
+		    print(results)
+
+		    print('==========完成!===========')
+
+		if __name__ == '__main__':
+		    main()
+
+
+	输出的结果是====> [[1,1,1],[4,4,4],[9,9,9],[16,16,16]] , 另外queue是队列
+
+
+	5-6: 线程锁例子如下:
+
+		import threading
+
+		# 处理函数
+		def thread_fn_1():
+		    global A,lock
+		    lock.acquire()
+		    for i in range(10):
+		        A+=1
+		        print('thread_fn_1' , A)
+		    lock.release()
+
+		def thread_fn_2():
+		    global A,lock
+		    lock.acquire()
+		    for i in range(10):
+		        A+=10
+		        print('thread_fn_2' , A)
+		    lock.release()
+
+
+		if __name__ == '__main__':
+		    A = 0
+		    lock = threading.Lock()  # 创建一个线程锁
+		    thread_1 = threading.Thread(target=thread_fn_1, name='thread_1')
+		    thread_2 = threading.Thread(target=thread_fn_2, name='thread_2')
+		    thread_1.start()
+		    thread_2.start()
+
+
+
+
+
+
+
+
+
+
+
