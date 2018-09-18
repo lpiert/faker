@@ -1,0 +1,23 @@
+MUMUDUO_DIRECTORY = /home/lpiert/codeManager/muduo_extern
+MUDUO_INCLUDE = /home/lpiert/codeManager/muduo_extern/include
+MUDUO_LIBRARY = /home/lpiert/codeManager/muduo_extern/lib
+SRC = ../src
+BIN = ../bin
+CXXFLAGS = -g -O0 -Wall -Wextra -Werror \
+	   -Wconversion -Wno-unused-parameter \
+	   -Wold-style-cast -Woverloaded-virtual \
+	   -Wpointer-arith -Wshadow -Wwrite-strings \
+	   -march=native -rdynamic \
+	   -I$(MUDUO_INCLUDE)
+
+LDFLAGS = -L$(MUDUO_LIBRARY) -lmuduo_net -lmuduo_base -lpthread -lrt
+
+all: echo
+clean:
+	rm -f $(BIN)/*
+	rm -f *.log
+echo: $(SRC)/*.cc
+
+	g++ $^ $(CXXFLAGS) -o $(BIN)/$@ $(LDFLAGS)
+
+.PHONY: all clean
