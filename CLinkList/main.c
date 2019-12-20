@@ -2,9 +2,45 @@
 #include "linkList.h"
 #include "EasyFree.h"
 
+//#define AFTER
+
+void* arr[] = { NULL } ;
+// if(arr != NULL) int size = sizof(arr) / sizeof(arr[0]);
+
+void aferMian(const void** arr)
+{
+    for (; arr != NULL; arr++)
+    {
+        void* ptr = *arr;
+        if (ptr != NULL)
+        {
+            printf("free %ptr\n", ptr);
+            free(ptr);
+            ptr = NULL;
+        }
+        else
+        {
+            break;
+        }
+    }
+    printf("main end");
+}
+
+void afterMainT()
+{
+    aferMian(arr);
+}
+
+
+
 
 int main(int argc, char** argv)
 {
+#ifdef AFTER
+    // 注册退出时运行函数
+    atexit(afterMainT);
+#endif 
+
 #if 0 
     // 创建链表
     LLIST_T* list = llist_new(sizeof(Data));
@@ -56,10 +92,19 @@ end:
 #endif
     int* a = (int*)malloc(sizeof(int));
     int* b = (int*)malloc(sizeof(int));
-    printf("%p %p\n", a, b);    
-    
+    int* c = (int*)malloc(sizeof(int));
+    int* d = (int*)malloc(sizeof(int));
+
+#ifdef AFTER
+    void* arry[] = {a,b,c};
+    memcpy(arr,arry,sizeof(arry));
+#endif 
+    printf("%p\n%p\n%p\n", a, b ,c);    
     system("pause");
-    RETURN_X(0, a, b);
+ 
+    FREE_4(a, b, c ,d);
+    //FFREE_HEAP(a,b,c);
+    return 0;
 }
 
 
